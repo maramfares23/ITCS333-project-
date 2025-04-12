@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Notes - Main Listing</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Course Notes</h1>
+        <div class="actions"><label><input type="text" placeholder="Search..." class="search-bar">
+
+            <a href=" item.html">
+                <button class="link-button">Add New Item</button>
+            </a>
+
+
+        </label>
+
+        </div>
+    </header>
+
+    <div class="controls">
+        <div class="sort-controls">
+            <label for="sort">Sort by:</label>
+            <select id="sort" name="sort">
+                <option value="date">Date</option>
+                <option value="title">Title</option>
+            </select>
+        </div>
+        <div class="pagination-controls">
+            <button>Previous</button>
+            <span>Page 1 of 5</span>
+            <button>Next</button>
+        </div>
+    </div>
+
+    <div class="item-grid">
+        <!-- Items will be displayed here -->
+        <div class="item-card">
+            <h2>Title of the Note</h2>
+            <p class="description">Short description of the note content...</p>
+            <a href="Detail.html">
+                <button class="link-button">View Details</button>
+            </a>
+        </div>
+        <!-- Add more item cards here -->
+    </div>
+</div>
+</body>
+</html>
