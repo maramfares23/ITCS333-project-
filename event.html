@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+<header class="bg-blue-500 text-white p-4">
+    <h1 class="text-2xl font-bold">Events Calendar</h1>
+</header>
+
+<main class="container mx-auto p-4">
+
+    <!-- Main Listing Page-->
+    <section id="main-listing" class="mb-8">
+        <div class="mb-6">
+            <input type="text" placeholder="Search events..." class="border p-2 w-full rounded-lg mb-2" />
+            <div class="flex justify-between items-center">
+                <div>
+                    <button class="bg-blue-500 text-white py-2 px-4 rounded">Sort by Date</button>
+                    <button class="bg-blue-500 text-white py-2 px-4 rounded ml-4">Sort by Name</button>
+                </div>
+                <div>
+                    <a href="#item-creation-form" class="bg-green-500 text-white py-2 px-4 rounded">Add New Event</a>
+                </div>
+            </div>
+        </div>
+
+        <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <article class="bg-white p-4 rounded-lg shadow-md">
+                <h2 class="font-semibold text-lg">Event Title</h2>
+                <p class="text-gray-600">Event description goes here...</p>
+                <div class="mt-4">
+                    <a href="#item-detail-view" class="text-blue-500">View Details</a>
+                </div>
+            </article>
+        </section>
+
+        <section class="mt-8 text-center">
+            <button class="bg-blue-500 text-white py-2 px-4 rounded-lg">Previous</button>
+            <span class="mx-4">Page 1 of 5</span>
+            <button class="bg-blue-500 text-white py-2 px-4 rounded-lg">Next</button>
+        </section>
+    </section>
+
+    <!-- Item Creation Form-->
+    <section id="item-creation-form" class="mb-8">
+        <form action="#" method="POST" class="bg-white p-6 rounded-lg shadow-md">
+            <label for="event-title" class="block text-gray-700">Event Title</label>
+            <input type="text" id="event-title" name="title" class="border p-2 w-full rounded-lg mb-4" required placeholder="Enter event title">
+
+            <label for="event-date" class="block text-gray-700">Event Date</label>
+            <input type="date" id="event-date" name="date" class="border p-2 w-full rounded-lg mb-4" required>
+
+            <label for="event-description" class="block text-gray-700">Event Description</label>
+            <textarea id="event-description" name="description" class="border p-2 w-full rounded-lg mb-4" required placeholder="Enter event description"></textarea>
+
+            <div class="flex justify-between">
+                <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded">Create Event</button>
+                <a href="#main-listing" class="bg-gray-500 text-white py-2 px-4 rounded">Cancel</a>
+            </div>
+        </form>
+    </section>
+
+    <!-- Item Detail View-->
+    <section id="item-detail-view" class="mb-8">
+        <article class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="font-semibold text-xl">Event Title</h2>
+            <p class="text-gray-600">Date: March 25, 2025</p>
+            <p class="text-gray-800 mt-4">This is the detailed description of the event...</p>
+            <div class="mt-6">
+                <button class="bg-yellow-500 text-white py-2 px-4 rounded mr-4">Edit</button>
+                <button class="bg-red-500 text-white py-2 px-4 rounded">Delete</button>
+            </div>
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold">Comments</h3>
+                <textarea class="border p-2 w-full rounded-lg mb-4" placeholder="Add a comment"></textarea>
+                <button class="bg-blue-500 text-white py-2 px-4 rounded">Submit Comment</button>
+            </div>
+            <div class="mt-4">
+                <a href="#main-listing" class="text-blue-500">Back to listing</a>
+            </div>
+        </article>
+    </section>
+
+</main>
+
+<footer class="bg-blue-500 text-white p-4 text-center">
+    <p>&copy; 2025 Events Calendar. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
