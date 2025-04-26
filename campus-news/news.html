@@ -1,35 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Campus News</title>
+    <title>UOB News</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="search.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body> 
-    <div class="campus-news">
-        <div class="section-content blog">
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="uob-logo.svg" alt="UOB Logo">
+                <span>UOB News</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Events Calendar</a></li>
+                <li><a href="#">Course Notes</a></li>
+                <li><a href="#">Club Activities</a></li>
+                <li><a href="#">Student Marketplace</a></li>
+                <li><a href="#">Technical Requirements</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="blog-section">
             <div class="title">
-                <h2>News</h2>
+                <h2 >Campus News</h2>
             </div>
             <div class="cards">
                 <div class="card">
                     <div class="image-section">
-                        <img src="pic1.jpg" alt=""> 
+                        <img src="pic1.jpg" alt="">
                     </div>
                     <div class="article">
                         <h4>UOB Discusses Strengthening Cooperation with Huawei</h4>
-                        <p>Dr. Fuad Mohammed Al-Ansari, President of the University of Bahrain,
-                             met with Huawei representatives to discuss leveraging Huawei’s 
-                             ICT expertise to enhance academic skills at the College of 
-                             Information Technology (CIT). They aim to collaborate on 
-                             training programs, courses, and certifications to empower 
-                             talent and support Bahrain's technological advancement and
-                              economic diversification.</p>
+                        <p>Dr. Fuad Mohammed Al-Ansari, President of UOB, met with Huawei representatives to explore new opportunities in digital transformation and research collaboration.</p>
+                        <div class="posted-date">Published: March 1, 2025</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="image-section">
+                        <img src="pic2.jpg" alt="">
+                    </div>
+                    <div class="article">
+                        <h4>Annual Science Fair Showcases Student Innovations</h4>
+                        <p>UOB students presented groundbreaking projects at the 2025 Science Fair, attracting industry leaders and fostering innovation.</p>
+                        <div class="posted-date">Published: March 3, 2025</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="image-section">
+                        <img src="pic3.jpg" alt="">
+                    </div>
+                    <div class="article">
+                        <h4>New Library Wing Opens to Public</h4>
+                        <p>The University inaugurated a state-of-the-art library wing, offering expanded resources and collaborative spaces for students.</p>
+                        <div class="posted-date">Published: March 5, 2025</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="image-section">
+                        <img src="pic4.jpg" alt="">
+                    </div>
+                    <div class="article">
+                        <h4>UOB Launches Green Campus Initiative</h4>
+                        <p>Efforts to reduce carbon footprint and promote sustainability are underway with the launch of the Green Campus Initiative.</p>
+                        <div class="posted-date">Published: March 7, 2025</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="image-section">
+                        <img src="pic5.jpg" alt="">
+                    </div>
+                    <div class="article">
+                        <h4>International Students Welcome Event Held</h4>
+                        <p>UOB welcomed over 200 international students with a special orientation event, celebrating cultural diversity on campus.</p>
+                        <div class="posted-date">Published: March 10, 2025</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="image-section">
+                        <img src="pic6.jpg" alt="">
+                    </div>
+                    <div class="article">
+                        <h4>Engineering Faculty Receives Accreditation</h4>
+                        <p>The Faculty of Engineering has been awarded international accreditation, recognizing its excellence in education and research.</p>
+                        <div class="posted-date">Published: March 12, 2025</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="image-section">
+                        <img src="pic7.jpg" alt="">
+                    </div>
+                    <div class="article">
+                        <h4>UOB Hosts Regional Debate Championship</h4>
+                        <p>Debate teams from across the region competed at UOB, showcasing critical thinking and public speaking skills.</p>
+                        <div class="posted-date">Published: March 15, 2025</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="image-section">
+                        <img src="pic8.jpg" alt="">
+                    </div>
+                    <div class="article">
+                        <h4>Scholarship Program Expands for 2025</h4>
+                        <p>More students will benefit from the expanded scholarship program, supporting academic excellence and financial need.</p>
+                        <div class="posted-date">Published: March 18, 2025</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="image-section">
+                        <img src="pic9.jpg" alt="">
+                    </div>
+                    <div class="article">
+                        <h4>Alumni Network Launches Mentorship Platform</h4>
+                        <p>UOB alumni are now mentoring current students through a new digital platform, strengthening career development opportunities.</p>
+                        <div class="posted-date">Published: March 20, 2025</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Sakhir Campus, Bahrain</p>
+                <p><i class="fas fa-phone"></i> +973 1234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@uob.edu.bh</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About UOB</a></li>
+                    <li><a href="#">Academic Programs</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">Student Services</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 University of Bahrain. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="search.js"></script>
+    <script src="theme.js"></script>
 </body>
 </html>
