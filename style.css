@@ -306,7 +306,7 @@ p {
 .footer {
     background: var(--secondary);
     color: var(--surface);
-    padding: 3rem 0 2rem;
+    padding: 2rem 0 1.5rem;
     margin-top: auto;
     position: relative;
     width: 100%;
@@ -314,10 +314,9 @@ p {
 
 .footer-content {
     max-width: 1200px;
-    
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1.5fr 1fr;
     gap: 2rem;
     padding: 0 1rem;
 }
@@ -412,7 +411,8 @@ p {
 .footer-bottom p {
     margin: 0;
     font-size: 0.9rem;
-    opacity: 0.8;
+    color: #ffffff;
+    opacity: 0.9;
 }
 
 @media (max-width: 1024px) {
@@ -478,7 +478,5 @@ p {
 }
 
 [data-theme='dark'] .title h2 {
-    color: #fff;
-} h2 {
     color: #fff;
 }
