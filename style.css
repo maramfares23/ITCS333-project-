@@ -2,9 +2,9 @@
 
 :root {
     /* Light Theme Colors */
-    --primary-light: #3674B5;
-    --secondary-light: #578FCA;
-    --accent-light: #A1E3F9;
+    --primary-light: #000408;
+    --secondary-light: #000000;
+    --accent-light: #00a876;
     --surface-light: #D1F8EF;
     --bg-light: #ffffff;
     --text-light: #333333;
@@ -35,6 +35,8 @@
     --text: var(--text-dark);
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -47,7 +49,9 @@ body {
     color: var(--text);
     transition: all 0.3s ease;
     min-height: 100vh;
-    background-image: linear-gradient(-45deg, #a1e3f9, #d1f8ef, #3674b5, #578fca);
+    display: flex;
+    flex-direction: column;
+    background-image: linear-gradient(-45deg, #b8a1f9, #d1f8ef, #8effe3, #d1f8db);
     background-size: 400% 400%;
     animation: gradientLightBG 12s ease-in-out infinite;
 }
@@ -77,17 +81,20 @@ body {
     top: 0;
     z-index: 1000;
     transition: background-color 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
 }
 
 
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .nav-left {
@@ -121,9 +128,10 @@ body {
 
 .nav-links {
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
     list-style: none;
     margin-right: auto;
+    white-space: nowrap;
 }
 
 .nav-links a {
@@ -298,12 +306,15 @@ p {
 .footer {
     background: var(--secondary);
     color: var(--surface);
-    padding: 4rem 0 0;
-    margin-top: 4rem;
+    padding: 3rem 0 2rem;
+    margin-top: auto;
+    position: relative;
+    width: 100%;
 }
 
 .footer-content {
     max-width: 1200px;
+    
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -467,5 +478,7 @@ p {
 }
 
 [data-theme='dark'] .title h2 {
+    color: #fff;
+} h2 {
     color: #fff;
 }
