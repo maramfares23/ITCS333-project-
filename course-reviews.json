@@ -1,0 +1,24 @@
+[
+    {
+      "id": 1,
+      "courseCode": "ITCS333",
+      "courseName": "Internet Software Development",
+      "rating": 4,
+      "review": "Great course with lots of hands-on experience."
+    },
+    {
+      "id": 2,
+      "courseCode": "ITCS411",
+      "courseName": "Cryptography & Security",
+      "rating": 5,
+      "review": "Very interesting topics and projects."
+    },
+    {
+      "id": 3,
+      "courseCode": "ITCS444",
+      "courseName": "Mobile App Development",
+      "rating": 3,
+      "review": "Good but needs better examples."
+    }
+  ]
+  
