@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Reviews</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-pink-50 text-gray-800">
+  <header class="bg-white shadow p-4">
+    <h1 class="text-2xl font-bold text-pink-600">Course Reviews</h1>
+  </header>
+
+  <main class="p-4 max-w-6xl mx-auto">
+    <!-- Search & Filters -->
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
+      <input type="text" id="searchInput" placeholder="Search courses..." class="w-full md:w-1/3 p-2 border rounded" />
+      <div class="flex gap-2">
+        <select id="departmentFilter" class="p-2 border rounded">
+          <option value="">All Departments</option>
+          <option value="CS">Computer Science</option>
+          <option value="IT">Information Tech</option>
+        </select>
+        <select id="sortSelect" class="p-2 border rounded">
+          <option value="desc">Sort by Rating (High → Low)</option>
+          <option value="asc">Sort by Rating (Low → High)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Add Button -->
+    <div class="text-right mb-4">
+      <a href="add-review.html" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded">+ Add New Review</a>
+    </div>
+
+    <!-- Reviews Grid -->
+    <section id="reviewsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Dynamic reviews will be rendered here -->
+    </section>
+
+    <!-- Pagination -->
+    <div id="pagination" class="mt-6 flex justify-center space-x-2"></div>
+  </main>
+
+  <footer class="text-center p-4 text-sm text-gray-500">
+    &copy; 2025 Campus Hub
+  </footer>
+
+  <!-- JavaScript Code -->
+  <script>
+    const reviewsContainer = document.getElementById("reviewsContainer");
+    const searchInput = document.getElementById("searchInput");
+    const departmentFilter = document.getElementById("departmentFilter");
+    const sortSelect = document.getElementById("sortSelect");
+    const pagination = document.getElementById("pagination");
+
+    const reviewsPerPage = 6;
+    let currentPage = 1;
+    let reviewsData = [];
+
+    // Fetch dummy data
+    async function fetchReviews() {
+      try {
+        const res = await fetch("https://jsonplaceholder.typicode.com/comments?_limit=30");
+        const data = await res.json();
+        // Simulate real reviews
+        reviewsData = data.map((item, i) => ({
+          id: item.id,
+          course: `Course ${i + 1}`,
+          department: i % 2 === 0 ? "CS" : "IT",
+          rating: Math.floor(Math.random() * 5) + 1,
+          comment: item.body
+        }));
+        renderReviews();
+      } catch (err) {
+        reviewsContainer.innerHTML = "<p class='text-red-500'>Failed to load reviews.</p>";
+      }
+    }
+
+    function renderReviews() {
+      const search = searchInput.value.toLowerCase();
+      const department = departmentFilter.value;
+      const sortOrder = sortSelect.value;
+
+      let filtered = reviewsData.filter(r =>
+        r.course.toLowerCase().includes(search) &&
+        (department === "" || r.department === department)
+      );
+
+      filtered.sort((a, b) => sortOrder === "asc" ? a.rating - b.rating : b.rating - a.rating);
+
+      const totalPages = Math.ceil(filtered.length / reviewsPerPage);
+      const start = (currentPage - 1) * reviewsPerPage;
+      const end = start + reviewsPerPage;
+      const pageItems = filtered.slice(start, end);
+
+      // Render reviews
+      reviewsContainer.innerHTML = pageItems.map(review => `
+        <article class="bg-white p-4 rounded shadow hover:shadow-lg transition">
+          <h2 class="text-lg font-semibold text-pink-700">${review.course} (${review.department})</h2>
+          <p class="text-sm text-gray-600">"${review.comment.slice(0, 60)}..."</p>
+          <p class="text-sm font-medium mt-2">Rating: <span class="text-yellow-600">${review.rating}/5</span></p>
+          <a href="review-detail.html" class="text-pink-500 mt-2 inline-block">Read more →</a>
+        </article>
+      `).join("");
+
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      pagination.innerHTML = "";
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = `px-3 py-1 rounded ${i === currentPage ? "bg-pink-500 text-white" : "bg-white border hover:bg-pink-100"}`;
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          renderReviews();
+        });
+        pagination.appendChild(btn);
+      }
+    }
+
+    // Event listeners
+    searchInput.addEventListener("input", () => {
+      currentPage = 1;
+      renderReviews();
+    });
+    departmentFilter.addEventListener("change", () => {
+      currentPage = 1;
+      renderReviews();
+    });
+    sortSelect.addEventListener("change", () => {
+      currentPage = 1;
+      renderReviews();
+    });
+
+    // Initialize
+    fetchReviews();
+  </script>
+</body>
+</html>

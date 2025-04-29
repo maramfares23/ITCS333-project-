@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Course Review</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-pink-50 text-gray-800">
+  <header class="bg-white shadow p-4">
+    <h1 class="text-2xl font-bold text-pink-600">Add New Course Review</h1>
+  </header>
+
+  <main class="p-4 max-w-2xl mx-auto">
+    <form id="reviewForm" class="bg-white p-6 rounded shadow space-y-4">
+      <div>
+        <label class="block font-medium">Course Name <span class="text-red-500">*</span></label>
+        <input type="text" id="courseName" required placeholder="e.g., ITCS411 - AI" class="w-full p-2 border rounded"/>
+      </div>
+
+      <div>
+        <label class="block font-medium">Instructor Name</label>
+        <input type="text" id="instructorName" placeholder="e.g., Dr. Smith" class="w-full p-2 border rounded"/>
+      </div>
+
+      <div>
+        <label class="block font-medium">Rating (1 to 5) <span class="text-red-500">*</span></label>
+        <input type="number" id="rating" min="1" max="5" required class="w-full p-2 border rounded"/>
+      </div>
+
+      <div>
+        <label class="block font-medium">Review <span class="text-red-500">*</span></label>
+        <textarea id="reviewText" required placeholder="Share your experience..." class="w-full p-2 border rounded" rows="4"></textarea>
+      </div>
+
+      <div class="flex justify-between">
+        <a href="course-reviews.html" class="text-gray-600 hover:underline">← Back</a>
+        <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded">Submit</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('reviewForm');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const courseName = document.getElementById('courseName').value.trim();
+      const instructorName = document.getElementById('instructorName').value.trim();
+      const rating = parseInt(document.getElementById('rating').value);
+      const reviewText = document.getElementById('reviewText').value.trim();
+
+      // Validate manually
+      if (!courseName || !rating || !reviewText) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      if (rating < 1 || rating > 5) {
+        alert("Rating must be between 1 and 5.");
+        return;
+      }
+
+      // Simulate successful submission (can be replaced with actual fetch call later)
+      alert("Your review has been submitted successfully!");
+
+      // Reset form
+      form.reset();
+
+      // Optional: redirect
+      // window.location.href = "course-reviews.html";
+    });
+  </script>
+</body>
+</html>
