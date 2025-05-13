@@ -2,44 +2,85 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Add Course Review</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-pink-100 via-purple-200 to-indigo-200 text-gray-800">
+<body class="bg-pink-50 text-gray-800">
+  <header class="bg-white shadow p-4">
+    <h1 class="text-2xl font-bold text-pink-600">Add New Course Review</h1>
+  </header>
 
-  <main class="max-w-3xl mx-auto p-8">
-    <h1 class="text-3xl font-bold mb-6 text-center text-pink-600">Add Course Review</h1>
-
-    <form class="space-y-6 bg-white p-8 rounded-xl shadow-lg">
+  <main class="p-4 max-w-2xl mx-auto">
+    <form id="reviewForm" class="bg-white p-6 rounded shadow space-y-4">
       <div>
-        <label for="course" class="block font-medium text-purple-600">Course Name <span class="text-red-500">*</span></label>
-        <input type="text" id="course" name="course" required class="w-full border-2 p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="e.g. ITCS 333 - Internet Software Development" />
+        <label class="block font-medium">Course Name <span class="text-red-500">*</span></label>
+        <input type="text" id="courseName" required placeholder="e.g., ITCS411 - CRYPTOGRAPHY & COMPUTER SECURITY" class="w-full p-2 border rounded"/>
       </div>
 
       <div>
-        <label for="rating" class="block font-medium text-purple-600">Rating <span class="text-red-500">*</span></label>
-        <select id="rating" name="rating" required class="w-full border-2 p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
-          <option value="">Select Rating</option>
-          <option value="5">⭐⭐⭐⭐⭐</option>
-          <option value="4">⭐⭐⭐⭐</option>
-          <option value="3">⭐⭐⭐</option>
-          <option value="2">⭐⭐</option>
-          <option value="1">⭐</option>
-        </select>
+        <label class="block font-medium">Instructor Name</label>
+        <input type="text" id="instructorName" placeholder="e.g., Dr.Abdulla " class="w-full p-2 border rounded"/>
       </div>
 
       <div>
-        <label for="review" class="block font-medium text-purple-600">Your Review <span class="text-red-500">*</span></label>
-        <textarea id="review" name="review" required class="w-full border-2 p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-pink-500" rows="6" placeholder="Share your experience..."></textarea>
+        <label class="block font-medium">Rating (1 to 5) <span class="text-red-500">*</span></label>
+        <input type="number" id="rating" min="1" max="5" required class="w-full p-2 border rounded"/>
+      </div>
+
+      <div>
+        <label class="block font-medium">Review <span class="text-red-500">*</span></label>
+        <textarea id="reviewText" required placeholder="Share your experience..." class="w-full p-2 border rounded" rows="4"></textarea>
       </div>
 
       <div class="flex justify-between">
-        <a href="course-reviews.html" class="text-pink-600 hover:text-pink-700">← Back to Reviews</a>
-        <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 shadow-xl transition-all">Submit Review</button>
+        <a href="course-reviews.html" class="text-gray-600 hover:underline">← Back</a>
+        <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded">Submit</button>
       </div>
+      <div>
+  <label class="block font-medium">Department <span class="text-red-500">*</span></label>
+  <select id="department" required class="w-full p-2 border rounded">
+    <option value="">-- Select Department --</option>
+    <option value="CS">Computer Science</option>
+    <option value="CE">computer engineering</option>
+  </select>
+</div>
     </form>
   </main>
 
+  <script>
+  document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const courseName = document.getElementById('courseName').value.trim();
+    const instructorName = document.getElementById('instructorName').value.trim();
+    const rating = parseInt(document.getElementById('rating').value);
+    const reviewText = document.getElementById('reviewText').value.trim();
+    const department = document.getElementById('department').value;
+
+    if (!courseName || !rating || !reviewText || !department) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    try {
+      const response = await fetch('api.php?action=add_review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course: courseName, instructor: instructorName, rating, review: reviewText, department })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert("Your review has been submitted successfully!");
+        window.location.href = "course-reviews.html";
+      } else {
+        alert("Something went wrong, please try again.");
+      }
+    } catch (error) {
+      alert("Failed to submit the review.");
+    }
+  });
+</script>
 </body>
 </html>

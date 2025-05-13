@@ -6,61 +6,119 @@
   <title>Course Reviews</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-pink-100 via-purple-200 to-indigo-200 text-gray-800">
-
-  <header class="bg-pink-500 text-white p-6 rounded-b-lg shadow-lg">
-    <h1 class="text-3xl font-bold text-center">Course Reviews</h1>
+<body class="bg-pink-50 text-gray-800">
+  <header class="bg-white shadow p-4">
+    <h1 class="text-2xl font-bold text-pink-600">Course Reviews</h1>
   </header>
 
-  <main class="p-6 max-w-7xl mx-auto">
-    
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
-      <input type="search" placeholder="Search by course name..." class="p-3 border-2 rounded-full w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300 ease-in-out" />
-      <div class="flex gap-6 mt-4 md:mt-0">
-        <select class="border-2 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300 ease-in-out">
-          <option disabled selected>Filter by Rating</option>
-          <option>5 Stars</option>
-          <option>4 Stars & Up</option>
-          <option>3 Stars & Up</option>
+  <main class="p-4 max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
+      <input type="text" id="searchInput" placeholder="Search courses..." class="w-full md:w-1/3 p-2 border rounded" />
+      <div class="flex gap-2">
+        <select id="departmentFilter" class="p-2 border rounded">
+          <option value="">All Departments</option>
+          <option value="CS">Computer Science</option>
+          <option value="CE">computer engineering</option>
         </select>
-        <select class="border-2 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300 ease-in-out">
-          <option disabled selected>Sort by</option>
-          <option>Newest</option>
-          <option>Oldest</option>
-          <option>Top Rated</option>
+        <select id="sortSelect" class="p-2 border rounded">
+          <option value="desc">Sort by Rating (High → Low)</option>
+          <option value="asc">Sort by Rating (Low → High)</option>
         </select>
       </div>
     </div>
 
-    
-    <div class="text-right mb-6">
-      <a href="add-review.html" class="bg-pink-500 text-white px-6 py-3 rounded-full hover:bg-pink-600 shadow-lg transition-all ease-in-out">Add New Review</a>
+    <div class="text-right mb-4">
+      <a href="add-review.html" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded">+ Add New Review</a>
     </div>
 
-    
-    <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <article class="bg-white p-6 rounded-xl shadow-xl hover:shadow-2xl transition-all ease-in-out">
-        <h2 class="text-xl font-semibold text-purple-600">ITCS 333 - Internet Software Dev</h2>
-        <p class="text-sm text-gray-500 mt-2">Rating: ⭐⭐⭐⭐☆</p>
-        <p class="mt-4 text-gray-700">Great course with hands-on projects. Learn JavaScript, HTML, and CSS for web development in ITCS 333.</p>
-        <a href="review-detail.html" class="text-pink-600 mt-4 inline-block hover:text-pink-700">Read More</a>
-      </article>
+    <section id="reviewsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></section>
 
-      
-
-    </section>
-    
-    
-    <div class="mt-10 flex justify-center gap-4">
-      <button class="px-5 py-3 border-2 rounded-full hover:bg-pink-500 hover:text-white transition-all ease-in-out">1</button>
-      <button class="px-5 py-3 border-2 rounded-full hover:bg-pink-500 hover:text-white transition-all ease-in-out">2</button>
-      <button class="px-5 py-3 border-2 rounded-full hover:bg-pink-500 hover:text-white transition-all ease-in-out">Next</button>
-    </div>
+    <div id="pagination" class="mt-6 flex justify-center space-x-2"></div>
   </main>
 
-  <footer class="text-center p-4 mt-10 text-gray-500">
-    &copy; 2025 Campus Hub - Course Reviews
+  <footer class="text-center p-4 text-sm text-gray-500">
+    &copy; 2025 Campus Hub
   </footer>
 
+  <script>
+    const reviewsContainer = document.getElementById("reviewsContainer");
+    const searchInput = document.getElementById("searchInput");
+    const departmentFilter = document.getElementById("departmentFilter");
+    const sortSelect = document.getElementById("sortSelect");
+    const pagination = document.getElementById("pagination");
+
+    const reviewsPerPage = 6;
+    let currentPage = 1;
+    let reviewsData = [];
+
+    async function fetchReviews() {
+      try {
+        const res = await fetch("api.php?action=get_reviews");
+        const data = await res.json();
+        reviewsData = data;
+        renderReviews();
+      } catch (err) {
+        reviewsContainer.innerHTML = "<p class='text-red-500'>Failed to load reviews.</p>";
+      }
+    }
+
+    function renderReviews() {
+      const search = searchInput.value.toLowerCase();
+      const department = departmentFilter.value;
+      const sortOrder = sortSelect.value;
+
+      let filtered = reviewsData.filter(r =>
+        r.course.toLowerCase().includes(search) &&
+        (department === "" || r.department === department)
+      );
+
+      filtered.sort((a, b) => sortOrder === "asc" ? a.rating - b.rating : b.rating - a.rating);
+
+      const totalPages = Math.ceil(filtered.length / reviewsPerPage);
+      const start = (currentPage - 1) * reviewsPerPage;
+      const end = start + reviewsPerPage;
+      const pageItems = filtered.slice(start, end);
+
+      reviewsContainer.innerHTML = pageItems.map(review => `
+        <article class="bg-white p-4 rounded shadow hover:shadow-lg transition">
+          <h2 class="text-lg font-semibold text-pink-700">${review.course} (${review.department})</h2>
+          <p class="text-sm text-gray-600">"${review.review.slice(0, 60)}..."</p>
+          <p class="text-sm font-medium mt-2">Rating: <span class="text-yellow-600">${review.rating}/5</span></p>
+          <a href="review-detail.html?id=${review.id}" class="text-pink-500 mt-2 inline-block">Read more →</a>
+        </article>
+      `).join("");
+
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      pagination.innerHTML = "";
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = `px-3 py-1 rounded ${i === currentPage ? "bg-pink-500 text-white" : "bg-white border hover:bg-pink-100"}`;
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          renderReviews();
+        });
+        pagination.appendChild(btn);
+      }
+    }
+
+    searchInput.addEventListener("input", () => {
+      currentPage = 1;
+      renderReviews();
+    });
+    departmentFilter.addEventListener("change", () => {
+      currentPage = 1;
+      renderReviews();
+    });
+    sortSelect.addEventListener("change", () => {
+      currentPage = 1;
+      renderReviews();
+    });
+
+    fetchReviews();
+  </script>
 </body>
 </html>
