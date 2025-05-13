@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "name": "Maths Workshop",
+      "date": "2025-05-20",
+      "category": "Education",
+      "location": "Room 101",
+      "description": "A workshop for maths students to prepare for exams."
+    },
+    {
+      "id": 2,
+      "name": "Student Social Night",
+      "date": "2025-05-25",
+      "category": "Social",
+      "location": "Campus Hall",
+      "description": "A fun evening with music, food, and games."
+    },
+    {
+      "id": 3,
+      "name": "Computer Science Guest Lecture",
+      "date": "2025-06-01",
+      "category": "Education",
+      "location": "Room 202",
+      "description": "A guest lecture on AI by an industry expert."
+    }
+  ]
+  

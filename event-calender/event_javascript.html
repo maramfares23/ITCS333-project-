@@ -1,175 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events Calendar</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Meta and responsive setup -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Campus Hub - Events Calendar</title>
+  
+  <!-- Tailwind CSS for styling -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 p-4">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-4">Events Calendar</h1>
 
-<header class="bg-blue-500 text-white p-4">
-    <h1 class="text-2xl font-bold">Events Calendar</h1>
-</header>
+    <!-- Add Event Form (with client-side validation) -->
+    <form id="eventForm" class="space-y-4 bg-white p-4 shadow rounded mb-6">
+      <h2 class="text-lg font-semibold">Add New Event (Validation Demo)</h2>
 
-<main class="container mx-auto p-4">
+      <!-- Title Field -->
+      <div>
+        <label class="block mb-1">Event Title</label>
+        <input type="text" id="eventTitle" class="w-full p-2 border rounded" />
+        <p class="text-red-500 text-sm hidden" id="errorTitle">Title is required.</p>
+      </div>
 
-    <!-- Main Listing Page-->
-    <section id="main-listing" class="mb-8">
-        <div class="mb-6">
-            <input type="text" placeholder="Search events..." class="border p-2 w-full rounded-lg mb-2" id="searchInput" />
-            <div class="flex justify-between items-center">
-                <div>
-                    <button id="sortDateBtn" class="bg-blue-500 text-white py-2 px-4 rounded">Sort by Date</button>
-                    <button id="sortNameBtn" class="bg-blue-500 text-white py-2 px-4 rounded ml-4">Sort by Name</button>
-                </div>
-                <div>
-                    <a href="#item-creation-form" class="bg-green-500 text-white py-2 px-4 rounded">Add New Event</a>
-                </div>
-            </div>
-        </div>
+      <!-- Date Field -->
+      <div>
+        <label class="block mb-1">Date (YYYY-MM-DD)</label>
+        <input type="date" id="eventDate" class="w-full p-2 border rounded" />
+        <p class="text-red-500 text-sm hidden" id="errorDate">Please enter a valid future date.</p>
+      </div>
 
-        <section id="eventList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Events will be injected here -->
-        </section>
+      <!-- Category Dropdown -->
+      <div>
+        <label class="block mb-1">Category</label>
+        <select id="eventCategory" class="w-full p-2 border rounded">
+          <option value="">Select a category</option>
+          <option value="Workshop">Workshop</option>
+          <option value="Seminar">Seminar</option>
+          <option value="Social">Social</option>
+        </select>
+        <p class="text-red-500 text-sm hidden" id="errorCategory">Please select a category.</p>
+      </div>
 
-        <section class="mt-8 text-center">
-            <button id="prevBtn" class="bg-blue-500 text-white py-2 px-4 rounded-lg">Previous</button>
-            <span id="pageIndicator" class="mx-4">Page 1 of 1</span>
-            <button id="nextBtn" class="bg-blue-500 text-white py-2 px-4 rounded-lg">Next</button>
-        </section>
-    </section>
+      <!-- Description Field -->
+      <div>
+        <label class="block mb-1">Description</label>
+        <textarea id="eventDescription" class="w-full p-2 border rounded"></textarea>
+        <p class="text-red-500 text-sm hidden" id="errorDescription">Description is required.</p>
+      </div>
 
-    <!-- Item Creation Form-->
-    <section id="item-creation-form" class="mb-8">
-        <form id="eventForm" action="#" method="POST" class="bg-white p-6 rounded-lg shadow-md">
-            <label for="event-title" class="block text-gray-700">Event Title</label>
-            <input type="text" id="event-title" name="title" class="border p-2 w-full rounded-lg mb-4" required placeholder="Enter event title">
+      <!-- Submit Button -->
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Validate</button>
+    </form>
 
-            <label for="event-date" class="block text-gray-700">Event Date</label>
-            <input type="date" id="event-date" name="date" class="border p-2 w-full rounded-lg mb-4" required>
+    <!--Search and Filters Section -->
+    <div class="flex flex-wrap gap-4 mb-4">
+      <input id="searchInput" type="text" placeholder="Search events..." class="p-2 border rounded flex-1">
+      <select id="categoryFilter" class="p-2 border rounded">
+        <option value="">All Categories</option>
+        <option value="Workshop">Workshop</option>
+        <option value="Seminar">Seminar</option>
+        <option value="Social">Social</option>
+      </select>
+      <select id="sortOrder" class="p-2 border rounded">
+        <option value="asc">Sort by Date ↑</option>
+        <option value="desc">Sort by Date ↓</option>
+      </select>
+    </div>
 
-            <label for="event-description" class="block text-gray-700">Event Description</label>
-            <textarea id="event-description" name="description" class="border p-2 w-full rounded-lg mb-4" required placeholder="Enter event description"></textarea>
+    <!-- Events List Output -->
+    <div id="eventsList" class="space-y-4"></div>
 
-            <div class="flex justify-between">
-                <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded">Create Event</button>
-                <a href="#main-listing" class="bg-gray-500 text-white py-2 px-4 rounded">Cancel</a>
-            </div>
-        </form>
-    </section>
+    <!-- Pagination Buttons -->
+    <div class="mt-6 flex justify-center space-x-2" id="pagination"></div>
+  </div>
 
-    <!-- Item Detail View-->
-    <section id="item-detail-view" class="mb-8">
-        <article class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="font-semibold text-xl" id="detailTitle">Event Title</h2>
-            <p class="text-gray-600" id="detailDate">Date: March 25, 2025</p>
-            <p class="text-gray-800 mt-4" id="detailDescription">This is the detailed description of the event...</p>
-            <div class="mt-6">
-                <button class="bg-yellow-500 text-white py-2 px-4 rounded mr-4">Edit</button>
-                <button class="bg-red-500 text-white py-2 px-4 rounded">Delete</button>
-            </div>
-            <div class="mt-8">
-                <h3 class="text-lg font-semibold">Comments</h3>
-                <textarea class="border p-2 w-full rounded-lg mb-4" placeholder="Add a comment"></textarea>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded">Submit Comment</button>
-            </div>
-            <div class="mt-4">
-                <a href="#main-listing" class="text-blue-500">Back to listing</a>
-            </div>
-        </article>
-    </section>
+  <!-- JavaScript Section -->
+  <script>
+    // JSON source (hosted on GitHub or MockAPI)
+    const eventsUrl = "https://yourusername.github.io/project/events.json"; // Replace with real URL
 
-</main>
-
-<footer class="bg-blue-500 text-white p-4 text-center">
-    <p>&copy; 2025 Events Calendar. All rights reserved.</p>
-</footer>
-
-<script>
-    const dummyEvents = [
-        { id: 1, title: 'Orientation Day', date: '2025-04-28', description: 'Welcome new students to the campus!' },
-        { id: 2, title: 'Spring Fest', date: '2025-05-10', description: 'Celebrate spring with music, food, and games.' },
-        { id: 3, title: 'Career Fair', date: '2025-05-15', description: 'Meet potential employers and polish your resume.' },
-        { id: 4, title: 'Coding Hackathon', date: '2025-05-20', description: '24 hours of coding, challenges and prizes!' },
-        { id: 5, title: 'Art Exhibition', date: '2025-05-25', description: 'Showcase of student artworks and performances.' },
-    ];
-
-    let events = [...dummyEvents];
+    // Global state variables
+    let allEvents = [];
     let currentPage = 1;
-    const itemsPerPage = 4;
+    const eventsPerPage = 3;
 
-    const searchInput = document.getElementById('searchInput');
-    const sortDateBtn = document.getElementById('sortDateBtn');
-    const sortNameBtn = document.getElementById('sortNameBtn');
-    const eventList = document.getElementById('eventList');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const pageIndicator = document.getElementById('pageIndicator');
-    const eventForm = document.getElementById('eventForm');
+    // DOM element references
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const sortOrder = document.getElementById("sortOrder");
+    const eventsList = document.getElementById("eventsList");
+    const pagination = document.getElementById("pagination");
 
-    const detailTitle = document.getElementById('detailTitle');
-    const detailDate = document.getElementById('detailDate');
-    const detailDescription = document.getElementById('detailDescription');
+    //Fetch events from external JSON source
+    async function fetchEvents() {
+      eventsList.innerHTML = "<p>Loading events...</p>"; // Show loading message
+      try {
+        const res = await fetch(eventsUrl); // Fetch from JSON URL
+        if (!res.ok) throw new Error("Failed to fetch events."); // Handle HTTP errors
+        allEvents = await res.json(); // Parse JSON array
+        renderEvents(); // Display events
+      } catch (err) {
+        eventsList.innerHTML = `<p class="text-red-600">Error: ${err.message}</p>`; // Show error
+      }
+    }
 
+    //Render filtered, sorted, and paginated events
     function renderEvents() {
-        const query = searchInput.value.toLowerCase();
-        const filtered = events.filter(e => e.title.toLowerCase().includes(query));
-        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+      // Apply search and category filter
+      let filtered = allEvents.filter(e =>
+        e.name.toLowerCase().includes(searchInput.value.toLowerCase()) &&
+        (!categoryFilter.value || e.category === categoryFilter.value)
+      );
 
-        const pageItems = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+      // Sort by date
+      filtered.sort((a, b) =>
+        sortOrder.value === "asc"
+          ? new Date(a.date) - new Date(b.date)
+          : new Date(b.date) - new Date(a.date)
+      );
 
-        eventList.innerHTML = '';
-        pageItems.forEach(event => {
-            const article = document.createElement('article');
-            article.className = 'bg-white p-4 rounded-lg shadow-md';
-            article.innerHTML = `
-                <h2 class="font-semibold text-lg">${event.title}</h2>
-                <p class="text-gray-600">${event.description}</p>
-                <div class="mt-4">
-                    <a href="#item-detail-view" class="text-blue-500" onclick="showDetail(${event.id})">View Details</a>
-                </div>
-            `;
-            eventList.appendChild(article);
+      // Pagination logic
+      const totalPages = Math.ceil(filtered.length / eventsPerPage);
+      const start = (currentPage - 1) * eventsPerPage;
+      const pageItems = filtered.slice(start, start + eventsPerPage);
+
+      // Render each event as a card
+      eventsList.innerHTML = pageItems.map(event => `
+        <div class="p-4 bg-white shadow rounded">
+          <h2 class="text-xl font-semibold">${event.name}</h2>
+          <p class="text-sm text-gray-600">${event.date} | ${event.category}</p>
+          <p class="mt-2">${event.description}</p>
+        </div>
+      `).join("");
+
+      // Render pagination controls
+      renderPagination(totalPages);
+    }
+
+    //Build pagination buttons
+    function renderPagination(totalPages) {
+      pagination.innerHTML = ""; // Clear old buttons
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = `px-3 py-1 rounded ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-white border'}`;
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          renderEvents();
         });
-
-        pageIndicator.textContent = `Page ${currentPage} of ${totalPages || 1}`;
-        prevBtn.disabled = currentPage === 1;
-        nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+        pagination.appendChild(btn);
+      }
     }
 
-    function showDetail(id) {
-        const event = events.find(e => e.id === id);
-        if (event) {
-            detailTitle.textContent = event.title;
-            detailDate.textContent = `Date: ${event.date}`;
-            detailDescription.textContent = event.description;
-        }
-    }
+    //Event listeners for filters and search
+    searchInput.addEventListener("input", () => { currentPage = 1; renderEvents(); });
+    categoryFilter.addEventListener("change", () => { currentPage = 1; renderEvents(); });
+    sortOrder.addEventListener("change", () => { currentPage = 1; renderEvents(); });
 
-    function validateForm(title, date, description) {
-        if (!title || !date || !description) {
-            alert('Please fill in all fields.');
-            return false;
-        }
-        return true;
-    }
+    //Validate the Add Event form without submitting it
+    document.getElementById("eventForm").addEventListener("submit", function (e) {
+      e.preventDefault(); // Stop form from submitting
 
-    searchInput.addEventListener('input', () => {
-        currentPage = 1;
-        renderEvents();
+      // Get field values
+      const title = document.getElementById("eventTitle");
+      const date = document.getElementById("eventDate");
+      const category = document.getElementById("eventCategory");
+      const description = document.getElementById("eventDescription");
+
+      // Get error message elements
+      const errorTitle = document.getElementById("errorTitle");
+      const errorDate = document.getElementById("errorDate");
+      const errorCategory = document.getElementById("errorCategory");
+      const errorDescription = document.getElementById("errorDescription");
+
+      let valid = true; // Form validation flag
+
+      //Title must not be empty
+      if (title.value.trim() === "") {
+        errorTitle.classList.remove("hidden");
+        valid = false;
+      } else {
+        errorTitle.classList.add("hidden");
+      }
+
+      //Date must be a valid future date
+      const today = new Date().toISOString().split("T")[0]; // Get today's date as string
+      if (!date.value || date.value < today) {
+        errorDate.classList.remove("hidden");
+        valid = false;
+      } else {
+        errorDate.classList.add("hidden");
+      }
+
+      //Category must be selected
+      if (!category.value) {
+        errorCategory.classList.remove("hidden");
+        valid = false;
+      } else {
+        errorCategory.classList.add("hidden");
+      }
+
+      //Description must not be empty
+      if (description.value.trim() === "") {
+        errorDescription.classList.remove("hidden");
+        valid = false;
+      } else {
+        errorDescription.classList.add("hidden");
+      }
+
+      //If everything is valid
+      if (valid) {
+        alert("Form is valid! You can now submit this to the backend.");
+      }
     });
 
-    sortDateBtn.addEventListener('click', () => {
-        events.sort((a, b) => a.date.localeCompare(b.date));
-        renderEvents();
-    });
-
-    sortNameBtn.addEventListener('click', () => {
-        events.sort((a, b) => a.title.localeCompare(b.title));
-        renderEvents();
-    });
-
-    prevBtn.addEventListener('click'), () => {
-        if (currentPage > 1) {
-            currentPage--;}}
+    //Initial fetch on page load
+    fetchEvents();
+  </script>
+</body>
+</html>
