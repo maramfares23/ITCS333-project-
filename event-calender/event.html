@@ -1,96 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <title>Events Calendar - UOB</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events Calendar</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .events-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 0.75rem;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .event-card {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-date {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .creation-form {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .event-detail {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .comments-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--accent);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .page-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="uob-logo.svg" alt="UOB Logo">
+                <span>UOB Events</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="news.html">Home</a></li>
+                <li><a href="#" class="active">Events Calendar</a></li>
+                <li><a href="course-reviews.html">Course Reviews</a></li>
+                <li><a href="finder.html">Study Groups</a></li>
+                <li><a href="#">Club Activities</a></li>
+                <li><a href="#">Student Marketplace</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </div>
+    </nav>
 
-<header class="bg-blue-500 text-white p-4">
-    <h1 class="text-2xl font-bold">Events Calendar</h1>
-</header>
+    <div class="events-container">
+        <h1>Events Calendar</h1>
 
-<main class="container mx-auto p-4">
-
-    <!-- Main Listing Page-->
-    <section id="main-listing" class="mb-8">
-        <div class="mb-6">
-            <input type="text" placeholder="Search events..." class="border p-2 w-full rounded-lg mb-2" />
-            <div class="flex justify-between items-center">
-                <div>
-                    <button class="bg-blue-500 text-white py-2 px-4 rounded">Sort by Date</button>
-                    <button class="bg-blue-500 text-white py-2 px-4 rounded ml-4">Sort by Name</button>
-                </div>
-                <div>
-                    <a href="#item-creation-form" class="bg-green-500 text-white py-2 px-4 rounded">Add New Event</a>
-                </div>
+        <div class="search-controls">
+            <input type="text" class="search-input" placeholder="Search events...">
+            <div class="control-buttons">
+                <button class="btn btn-secondary" onclick="sortByDate()">
+                    <i class="fas fa-calendar"></i> Sort by Date
+                </button>
+                <button class="btn btn-secondary" onclick="sortByName()">
+                    <i class="fas fa-sort-alpha-down"></i> Sort by Name
+                </button>
+                <button class="btn btn-primary" onclick="showCreateForm()">
+                    <i class="fas fa-plus"></i> Add New Event
+                </button>
             </div>
         </div>
 
-        <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <article class="bg-white p-4 rounded-lg shadow-md">
-                <h2 class="font-semibold text-lg">Event Title</h2>
-                <p class="text-gray-600">Event description goes here...</p>
-                <div class="mt-4">
-                    <a href="#item-detail-view" class="text-blue-500">View Details</a>
+        <div class="events-grid" id="eventsGrid">
+            <!-- Events will be dynamically loaded here -->
+        </div>
+
+        <div class="pagination">
+            <button class="page-button">Previous</button>
+            <button class="page-button active">1</button>
+            <button class="page-button">2</button>
+            <button class="page-button">3</button>
+            <button class="page-button">Next</button>
+        </div>
+
+        <div id="createEventForm" class="creation-form" style="display: none;">
+            <h2>Create New Event</h2>
+            <form onsubmit="createEvent(event)">
+                <div class="form-group">
+                    <label for="eventTitle">Event Title</label>
+                    <input type="text" id="eventTitle" required>
                 </div>
-            </article>
-        </section>
+                <div class="form-group">
+                    <label for="eventDate">Event Date</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Event Description</label>
+                    <textarea id="eventDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Event</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideCreateForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        <section class="mt-8 text-center">
-            <button class="bg-blue-500 text-white py-2 px-4 rounded-lg">Previous</button>
-            <span class="mx-4">Page 1 of 5</span>
-            <button class="bg-blue-500 text-white py-2 px-4 rounded-lg">Next</button>
-        </section>
-    </section>
-
-    <!-- Item Creation Form-->
-    <section id="item-creation-form" class="mb-8">
-        <form action="#" method="POST" class="bg-white p-6 rounded-lg shadow-md">
-            <label for="event-title" class="block text-gray-700">Event Title</label>
-            <input type="text" id="event-title" name="title" class="border p-2 w-full rounded-lg mb-4" required placeholder="Enter event title">
-
-            <label for="event-date" class="block text-gray-700">Event Date</label>
-            <input type="date" id="event-date" name="date" class="border p-2 w-full rounded-lg mb-4" required>
-
-            <label for="event-description" class="block text-gray-700">Event Description</label>
-            <textarea id="event-description" name="description" class="border p-2 w-full rounded-lg mb-4" required placeholder="Enter event description"></textarea>
-
-            <div class="flex justify-between">
-                <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded">Create Event</button>
-                <a href="#main-listing" class="bg-gray-500 text-white py-2 px-4 rounded">Cancel</a>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Sakhir Campus, Bahrain</p>
+                <p><i class="fas fa-phone"></i> +973 1234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@uob.edu.bh</p>
             </div>
-        </form>
-    </section>
-
-    <!-- Item Detail View-->
-    <section id="item-detail-view" class="mb-8">
-        <article class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="font-semibold text-xl">Event Title</h2>
-            <p class="text-gray-600">Date: March 25, 2025</p>
-            <p class="text-gray-800 mt-4">This is the detailed description of the event...</p>
-            <div class="mt-6">
-                <button class="bg-yellow-500 text-white py-2 px-4 rounded mr-4">Edit</button>
-                <button class="bg-red-500 text-white py-2 px-4 rounded">Delete</button>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About UOB</a></li>
+                    <li><a href="#">Academic Programs</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">Student Services</a></li>
+                </ul>
             </div>
-            <div class="mt-8">
-                <h3 class="text-lg font-semibold">Comments</h3>
-                <textarea class="border p-2 w-full rounded-lg mb-4" placeholder="Add a comment"></textarea>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded">Submit Comment</button>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
             </div>
-            <div class="mt-4">
-                <a href="#main-listing" class="text-blue-500">Back to listing</a>
-            </div>
-        </article>
-    </section>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 University of Bahrain. All rights reserved.</p>
+        </div>
+    </footer>
 
-</main>
+    <script src="theme.js"></script>
+    <script>
+        // Sample events data
+        const events = [
+            {
+                id: 1,
+                title: 'End of Semester Exhibition',
+                date: '2024-05-15',
+                description: 'Showcase of student projects from all departments'
+            },
+            {
+                id: 2,
+                title: 'Career Fair 2024',
+                date: '2024-04-20',
+                description: 'Annual career fair with leading companies'
+            }
+        ];
 
-<footer class="bg-blue-500 text-white p-4 text-center">
-    <p>&copy; 2025 Events Calendar. All rights reserved.</p>
-</footer>
+        function displayEvents() {
+            const grid = document.getElementById('eventsGrid');
+            grid.innerHTML = events.map(event => `
+                <div class="event-card">
+                    <h3 class="event-title">${event.title}</h3>
+                    <div class="event-date">
+                        <i class="far fa-calendar"></i>
+                        ${new Date(event.date).toLocaleDateString()}
+                    </div>
+                    <p class="event-description">${event.description}</p>
+                    <a href="#" class="btn btn-primary" onclick="viewEventDetails(${event.id})">
+                        View Details
+                    </a>
+                </div>
+            `).join('');
+        }
 
+        function showCreateForm() {
+            document.getElementById('createEventForm').style.display = 'block';
+        }
+
+        function hideCreateForm() {
+            document.getElementById('createEventForm').style.display = 'none';
+        }
+
+        function createEvent(e) {
+            e.preventDefault();
+            const newEvent = {
+                id: events.length + 1,
+                title: document.getElementById('eventTitle').value,
+                date: document.getElementById('eventDate').value,
+                description: document.getElementById('eventDescription').value
+            };
+            events.push(newEvent);
+            displayEvents();
+            hideCreateForm();
+            e.target.reset();
+        }
+
+        function sortByDate() {
+            events.sort((a, b) => new Date(a.date) - new Date(b.date));
+            displayEvents();
+        }
+
+        function sortByName() {
+            events.sort((a, b) => a.title.localeCompare(b.title));
+            displayEvents();
+        }
+
+        // Initialize the page
+        displayEvents();
+    </script>
 </body>
 </html>
