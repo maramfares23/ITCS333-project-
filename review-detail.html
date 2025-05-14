@@ -1,81 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Review Details</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <title>Course Review Details - UOB</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="University of Bahrain Course Review Details">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .review-container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .review-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .course-title {
+            font-size: 2.5rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .course-code {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .rating-section {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .rating-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--background);
+            border-radius: 10px;
+            min-width: 150px;
+        }
+
+        .rating-value {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-label {
+            color: var(--text-light);
+        }
+
+        .review-content {
+            padding: 2rem;
+            background: var(--background);
+            border-radius: 10px;
+            margin: 2rem 0;
+            line-height: 1.8;
+        }
+
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--accent);
+            color: var(--text-light);
+        }
+
+        .comments-section {
+            margin-top: 3rem;
+        }
+
+        .comment {
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .comment:hover {
+            transform: translateX(5px);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .comment-form {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--background);
+            border-radius: 10px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            margin-bottom: 1rem;
+            min-height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .comment-form textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .review-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .course-title {
+                font-size: 2rem;
+            }
+
+            .rating-section {
+                gap: 1rem;
+            }
+
+            .rating-item {
+                min-width: 120px;
+            }
+        }
+    </style>
 </head>
-<body class="bg-pink-50 text-gray-800">
-  <header class="bg-white shadow p-4">
-    <h1 class="text-2xl font-bold text-pink-600">Course Review Details</h1>
-  </header>
-
-  <main class="p-4 max-w-3xl mx-auto space-y-6">
-    <section class="bg-white p-6 rounded shadow" id="reviewDetail">
-      <h2 class="text-xl font-semibold text-pink-700">Course: ITCS411 - Artificial Intelligence</h2>
-      <p class="text-sm text-gray-600 mb-2">Instructor: Dr. Smith</p>
-      <p class="font-medium text-yellow-500">Rating: ★★★★☆</p>
-      <p class="mt-4">This course was very informative, with a lot of real-world applications. I really enjoyed the assignments and the instructor was very helpful.</p>
-
-      <div class="mt-6 flex gap-2">
-        <button id="editBtn" class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-1 rounded">Edit</button>
-        <button id="deleteBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded">Delete</button>
-      </div>
-    </section>
-
-    <!-- Comments Section -->
-    <section class="bg-white p-6 rounded shadow space-y-4">
-      <h3 class="text-lg font-bold text-pink-600">Comments</h3>
-      
-      <!-- Existing comments -->
-      <div id="commentsList" class="space-y-3">
-        <div class="border-l-4 border-pink-300 pl-3">
-          <p class="text-sm"><strong>Maryam:</strong> I agree! The assignments were really helpful.</p>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="uob-logo.svg" alt="UOB Logo">
+                <span>UOB Course Reviews</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="event.javascript.html">Events</a></li>
+                <li><a href="course-reviews.html" class="active">Course Reviews</a></li>
+                <li><a href="finder.html">Study Groups</a></li>
+                <li><a href="#">Club Activities</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         </div>
-        <div class="border-l-4 border-pink-300 pl-3">
-          <p class="text-sm"><strong>Ali:</strong> The instructor explained concepts very clearly.</p>
+    </nav>
+
+    <main class="review-container">
+        <div class="review-header">
+            <h1 class="course-title">Introduction to Computer Science</h1>
+            <div class="course-code">ITCS113</div>
+            <div class="instructor">Dr. John Smith</div>
         </div>
-      </div>
 
-      <!-- Add Comment Form -->
-      <form id="commentForm" class="space-y-3">
-        <input type="text" id="commentAuthor" placeholder="Your name" required class="w-full p-2 border rounded" />
-        <textarea id="commentText" placeholder="Add a comment..." required class="w-full p-2 border rounded"></textarea>
-        <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-1 rounded">Post Comment</button>
-      </form>
-    </section>
+        <div class="rating-section">
+            <div class="rating-item">
+                <div class="rating-value">4.5</div>
+                <div class="rating-label">Overall Rating</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-value">4.2</div>
+                <div class="rating-label">Difficulty</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-value">4.8</div>
+                <div class="rating-label">Teaching Quality</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-value">4.3</div>
+                <div class="rating-label">Workload</div>
+            </div>
+        </div>
 
-    <a href="course-reviews.html" class="text-pink-600 hover:underline">← Back to all reviews</a>
-  </main>
+        <div class="review-content">
+            <p>This course provides an excellent introduction to computer science fundamentals. The professor explains concepts clearly and provides practical examples. The assignments are challenging but helpful for understanding the material. Labs are well-structured and the teaching assistants are supportive.</p>
+            <div class="review-meta">
+                <span>Posted by: Ahmed</span>
+                <span>Date: April 15, 2025</span>
+            </div>
+        </div>
 
-  <script>
-    document.getElementById("editBtn").addEventListener("click", () => {
-      alert("Redirecting to edit page...");
-      // window.location.href = `edit-review.html?id=REVIEW_ID`;
-    });
+        <section class="comments-section">
+            <h2>Comments</h2>
+            <div class="comments-list">
+                <div class="comment">
+                    <div class="comment-header">
+                        <span>Sarah</span>
+                        <span>April 16, 2025</span>
+                    </div>
+                    <p>I agree! The practical examples really helped me understand the concepts better.</p>
+                </div>
+                <div class="comment">
+                    <div class="comment-header">
+                        <span>Mohammed</span>
+                        <span>April 17, 2025</span>
+                    </div>
+                    <p>The assignments were challenging but very rewarding. Great course overall!</p>
+                </div>
+            </div>
 
-    document.getElementById("deleteBtn").addEventListener("click", () => {
-      const confirmDelete = confirm("Are you sure you want to delete this review?");
-      if (confirmDelete) {
-        document.getElementById("reviewDetail").remove();
-        alert("The review has been deleted.");
-      }
-    });
+            <form class="comment-form">
+                <div class="form-group">
+                    <textarea placeholder="Add your comment..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Post Comment
+                </button>
+            </form>
+        </section>
+    </main>
 
-    // Comment submission
-    document.getElementById("commentForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const author = document.getElementById("commentAuthor").value.trim();
-      const comment = document.getElementById("commentText").value.trim();
-      if (author && comment) {
-        const newComment = document.createElement("div");
-        newComment.classList.add("border-l-4", "border-pink-300", "pl-3");
-        newComment.innerHTML = `<p class="text-sm"><strong>${author}:</strong> ${comment}</p>`;
-        document.getElementById("commentsList").appendChild(newComment);
-        document.getElementById("commentForm").reset();
-      }
-    });
-  </script>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Sakhir Campus, Bahrain</p>
+                <p><i class="fas fa-phone"></i> +973 1234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@uob.edu.bh</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About UOB</a></li>
+                    <li><a href="#">Academic Programs</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">Student Services</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 University of Bahrain. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
 </body>
 </html>
