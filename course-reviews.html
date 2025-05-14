@@ -1,124 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Course Reviews</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <title>Course Reviews - UOB</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse and search course reviews at University of Bahrain">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .reviews-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 200px;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .course-info h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .instructor-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .rating {
+            color: #ffd700;
+            font-size: 1.25rem;
+        }
+
+        .review-content {
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .add-review-button {
+            margin: 2rem 0;
+            text-align: right;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .page-button.active {
+            background: #4a90e2;
+            color: white;
+            border-color: #4a90e2;
+        }
+    </style>
 </head>
-<body class="bg-pink-50 text-gray-800">
-  <header class="bg-white shadow p-4">
-    <h1 class="text-2xl font-bold text-pink-600">Course Reviews</h1>
-  </header>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="uob-logo.svg" alt="UOB Logo">
+                <span>UOB Course Reviews</span>
+            </div>
+            <ul class="nav-links">
+              <li><a href="home.html">Home</a></li>
+                <li><a href="news.html">Campus News</a></li>
+                <li><a href="event.javascript.html">Events Calendar</a></li>
+                <li><a href="course-reviews.html" class="active">Course Reviews</a></li>
+                <li><a href="clubactivites.html">Club Activities</a></li>
+                
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </div>
+    </nav>
 
-  <main class="p-4 max-w-6xl mx-auto">
-    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
-      <input type="text" id="searchInput" placeholder="Search courses..." class="w-full md:w-1/3 p-2 border rounded" />
-      <div class="flex gap-2">
-        <select id="departmentFilter" class="p-2 border rounded">
-          <option value="">All Departments</option>
-          <option value="CS">Computer Science</option>
-          <option value="CE">computer engineering</option>
-        </select>
-        <select id="sortSelect" class="p-2 border rounded">
-          <option value="desc">Sort by Rating (High → Low)</option>
-          <option value="asc">Sort by Rating (Low → High)</option>
-        </select>
-      </div>
+    <div class="reviews-container">
+        <h1>Course Reviews</h1>
+        
+        <div class="search-filters">
+            <input type="text" class="search-input" placeholder="Search by course name or instructor...">
+            <div class="filter-group">
+                <select class="filter-select" id="departmentFilter">
+                    <option value="">All Departments</option>
+                    <option value="CS">Computer Science</option>
+                    <option value="CE">Computer Engineering</option>
+                    <option value="IS">Information Systems</option>
+                    <option value="IT">Information Technology</option>
+                </select>
+                <select class="filter-select" id="ratingFilter">
+                    <option value="">All Ratings</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4+ Stars</option>
+                    <option value="3">3+ Stars</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="add-review-button">
+            <a href="add-review.html" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Review
+            </a>
+        </div>
+
+        <div id="reviewsContainer">
+            <!-- Reviews will be dynamically loaded here -->
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be dynamically generated -->
+        </div>
     </div>
 
-    <div class="text-right mb-4">
-      <a href="add-review.html" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded">+ Add New Review</a>
-    </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Sakhir Campus, Bahrain</p>
+                <p><i class="fas fa-phone"></i> +973 1234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@uob.edu.bh</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About UOB</a></li>
+                    <li><a href="#">Academic Programs</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">Student Services</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 University of Bahrain. All rights reserved.</p>
+        </div>
+    </footer>
 
-    <section id="reviewsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></section>
+    <script src="theme.js"></script>
+    <script>
+        // Sample review data (replace with actual data from your backend)
+        const reviews = [
+            {
+                id: 1,
+                course: 'ITCS411 - Cryptography & Computer Security',
+                instructor: 'Dr. Abdullah',
+                department: 'CS',
+                rating: 5,
+                review: 'Excellent course! The professor explains complex concepts clearly.',
+                date: '2024-02-15'
+            },
+            // Add more sample reviews here
+        ];
 
-    <div id="pagination" class="mt-6 flex justify-center space-x-2"></div>
-  </main>
+        let currentPage = 1;
+        const reviewsPerPage = 5;
 
-  <footer class="text-center p-4 text-sm text-gray-500">
-    &copy; 2025 Campus Hub
-  </footer>
+        function displayReviews(filteredReviews = reviews) {
+            const start = (currentPage - 1) * reviewsPerPage;
+            const end = start + reviewsPerPage;
+            const paginatedReviews = filteredReviews.slice(start, end);
 
-  <script>
-    const reviewsContainer = document.getElementById("reviewsContainer");
-    const searchInput = document.getElementById("searchInput");
-    const departmentFilter = document.getElementById("departmentFilter");
-    const sortSelect = document.getElementById("sortSelect");
-    const pagination = document.getElementById("pagination");
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = '';
 
-    const reviewsPerPage = 6;
-    let currentPage = 1;
-    let reviewsData = [];
+            paginatedReviews.forEach(review => {
+                const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+                const reviewElement = `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="course-info">
+                                <h3>${review.course}</h3>
+                                <div class="instructor-info">
+                                    <i class="fas fa-user-tie"></i> ${review.instructor} | 
+                                    <i class="fas fa-university"></i> ${review.department}
+                                </div>
+                            </div>
+                            <div class="rating">${stars}</div>
+                        </div>
+                        <div class="review-content">${review.review}</div>
+                        <div class="review-meta">
+                            <span><i class="far fa-calendar"></i> ${review.date}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += reviewElement;
+            });
 
-    async function fetchReviews() {
-      try {
-        const res = await fetch("api.php?action=get_reviews");
-        const data = await res.json();
-        reviewsData = data;
-        renderReviews();
-      } catch (err) {
-        reviewsContainer.innerHTML = "<p class='text-red-500'>Failed to load reviews.</p>";
-      }
-    }
+            updatePagination(filteredReviews.length);
+        }
 
-    function renderReviews() {
-      const search = searchInput.value.toLowerCase();
-      const department = departmentFilter.value;
-      const sortOrder = sortSelect.value;
+        function updatePagination(totalReviews) {
+            const totalPages = Math.ceil(totalReviews / reviewsPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
 
-      let filtered = reviewsData.filter(r =>
-        r.course.toLowerCase().includes(search) &&
-        (department === "" || r.department === department)
-      );
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.className = page-button ${i === currentPage ? 'active' : ''};
+                button.textContent = i;
+                button.onclick = () => {
+                    currentPage = i;
+                    displayReviews();
+                };
+                pagination.appendChild(button);
+            }
+        }
 
-      filtered.sort((a, b) => sortOrder === "asc" ? a.rating - b.rating : b.rating - a.rating);
+        // Search and filter functionality
+        document.querySelector('.search-input').addEventListener('input', filterReviews);
+        document.getElementById('departmentFilter').addEventListener('change', filterReviews);
+        document.getElementById('ratingFilter').addEventListener('change', filterReviews);
 
-      const totalPages = Math.ceil(filtered.length / reviewsPerPage);
-      const start = (currentPage - 1) * reviewsPerPage;
-      const end = start + reviewsPerPage;
-      const pageItems = filtered.slice(start, end);
+        function filterReviews() {
+            const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+            const departmentFilter = document.getElementById('departmentFilter').value;
+            const ratingFilter = parseInt(document.getElementById('ratingFilter').value) || 0;
 
-      reviewsContainer.innerHTML = pageItems.map(review => `
-        <article class="bg-white p-4 rounded shadow hover:shadow-lg transition">
-          <h2 class="text-lg font-semibold text-pink-700">${review.course} (${review.department})</h2>
-          <p class="text-sm text-gray-600">"${review.review.slice(0, 60)}..."</p>
-          <p class="text-sm font-medium mt-2">Rating: <span class="text-yellow-600">${review.rating}/5</span></p>
-          <a href="review-detail.html?id=${review.id}" class="text-pink-500 mt-2 inline-block">Read more →</a>
-        </article>
-      `).join("");
+            const filteredReviews = reviews.filter(review => {
+                const matchesSearch = review.course.toLowerCase().includes(searchTerm) ||
+                                    review.instructor.toLowerCase().includes(searchTerm);
+                const matchesDepartment = !departmentFilter || review.department === departmentFilter;
+                const matchesRating = !ratingFilter || review.rating >= ratingFilter;
 
-      renderPagination(totalPages);
-    }
+                return matchesSearch && matchesDepartment && matchesRating;
+            });
 
-    function renderPagination(totalPages) {
-      pagination.innerHTML = "";
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.className = `px-3 py-1 rounded ${i === currentPage ? "bg-pink-500 text-white" : "bg-white border hover:bg-pink-100"}`;
-        btn.addEventListener("click", () => {
-          currentPage = i;
-          renderReviews();
-        });
-        pagination.appendChild(btn);
-      }
-    }
+            currentPage = 1;
+            displayReviews(filteredReviews);
+        }
 
-    searchInput.addEventListener("input", () => {
-      currentPage = 1;
-      renderReviews();
-    });
-    departmentFilter.addEventListener("change", () => {
-      currentPage = 1;
-      renderReviews();
-    });
-    sortSelect.addEventListener("change", () => {
-      currentPage = 1;
-      renderReviews();
-    });
-
-    fetchReviews();
-  </script>
+        // Initial display
+        displayReviews();
+    </script>
 </body>
 </html>
