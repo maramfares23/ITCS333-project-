@@ -1,45 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Add Course Review</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <title>Add Course Review - UOB</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Add your course review for University of Bahrain courses">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .review-form-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 2rem auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #4a90e2;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .star {
+            color: #ffd700;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .star:hover {
+            transform: scale(1.2);
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #4a90e2;
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .character-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-r from-pink-100 via-purple-200 to-indigo-200 text-gray-800">
+<body>
+   
 
-  <main class="max-w-3xl mx-auto p-8">
-    <h1 class="text-3xl font-bold mb-6 text-center text-pink-600">Add Course Review</h1>
+    <div class="container">
+        <div class="review-form-section">
+            <h2>Add New Course Review</h2>
+            <form id="reviewForm" class="review-form">
+                <div class="form-group">
+                    <label for="courseName">Course Name <span class="required">*</span></label>
+                    <input type="text" id="courseName" required 
+                           placeholder="e.g., ITCS411 - CRYPTOGRAPHY & COMPUTER SECURITY"
+                           pattern="[A-Z]{4}[0-9]{3}.*">
+                </div>
 
-    <form class="space-y-6 bg-white p-8 rounded-xl shadow-lg">
-      <div>
-        <label for="course" class="block font-medium text-purple-600">Course Name <span class="text-red-500">*</span></label>
-        <input type="text" id="course" name="course" required class="w-full border-2 p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="e.g. ITCS 333 - Internet Software Development" />
-      </div>
+                <div class="form-group">
+                    <label for="department">Department <span class="required">*</span></label>
+                    <select id="department" required>
+                        <option value="">-- Select Department --</option>
+                        <option value="CS">Computer Science</option>
+                        <option value="CE">Computer Engineering</option>
+                        <option value="IS">Information Systems</option>
+                        <option value="IT">Information Technology</option>
+                        <option value="CYS">Cybersecurity</option>
+                    </select>
+                </div>
 
-      <div>
-        <label for="rating" class="block font-medium text-purple-600">Rating <span class="text-red-500">*</span></label>
-        <select id="rating" name="rating" required class="w-full border-2 p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
-          <option value="">Select Rating</option>
-          <option value="5">⭐⭐⭐⭐⭐</option>
-          <option value="4">⭐⭐⭐⭐</option>
-          <option value="3">⭐⭐⭐</option>
-          <option value="2">⭐⭐</option>
-          <option value="1">⭐</option>
-        </select>
-      </div>
+                <div class="form-group">
+                    <label for="instructorName">Instructor Name</label>
+                    <input type="text" id="instructorName" 
+                           placeholder="e.g., Dr. Abdullah">
+                </div>
 
-      <div>
-        <label for="review" class="block font-medium text-purple-600">Your Review <span class="text-red-500">*</span></label>
-        <textarea id="review" name="review" required class="w-full border-2 p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-pink-500" rows="6" placeholder="Share your experience..."></textarea>
-      </div>
+                <div class="form-group">
+                    <label>Rating <span class="required">*</span></label>
+                    <div class="rating-stars" id="ratingStars">
+                        <i class="far fa-star star" data-rating="1"></i>
+                        <i class="far fa-star star" data-rating="2"></i>
+                        <i class="far fa-star star" data-rating="3"></i>
+                        <i class="far fa-star star" data-rating="4"></i>
+                        <i class="far fa-star star" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" id="rating" required>
+                </div>
 
-      <div class="flex justify-between">
-        <a href="course-reviews.html" class="text-pink-600 hover:text-pink-700">← Back to Reviews</a>
-        <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 shadow-xl transition-all">Submit Review</button>
-      </div>
-    </form>
-  </main>
+                <div class="form-group">
+                    <label for="reviewText">Review <span class="required">*</span></label>
+                    <textarea id="reviewText" required 
+                              placeholder="Share your experience with this course..." 
+                              rows="4"
+                              minlength="50"></textarea>
+                    <div class="character-count">0/500</div>
+                </div>
 
+                <div class="form-actions">
+                    <a href="course-reviews.html" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Review
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    // ... existing code ...
+
+    <script>
+        // Star rating functionality
+        const ratingStars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+
+        ratingStars.forEach(star => {
+            star.addEventListener('mouseover', function() {
+                const rating = this.dataset.rating;
+                updateStars(rating);
+            });
+
+            star.addEventListener('mouseout', function() {
+                const rating = ratingInput.value || 0;
+                updateStars(rating);
+            });
+
+            star.addEventListener('click', function() {
+                const rating = this.dataset.rating;
+                ratingInput.value = rating;
+                updateStars(rating);
+            });
+        });
+
+        function updateStars(rating) {
+            ratingStars.forEach(star => {
+                const starRating = star.dataset.rating;
+                star.className = starRating <= rating ? 'fas fa-star star' : 'far fa-star star';
+            });
+        }
+
+        // Character counter
+        const reviewText = document.getElementById('reviewText');
+        const charCount = document.querySelector('.character-count');
+
+        reviewText.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = `${length}/500`;
+
+            if (length > 500) {
+                this.value = this.value.substring(0, 500);
+                charCount.textContent = '500/500';
+            }
+
+            charCount.style.color = length < 50 ? '#e74c3c' : '#666';
+        });
+
+        // Form submission
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const courseName = document.getElementById('courseName').value.trim();
+            const instructorName = document.getElementById('instructorName').value.trim();
+            const rating = document.getElementById('rating').value;
+            const reviewText = document.getElementById('reviewText').value.trim();
+            const department = document.getElementById('department').value;
+
+            if (!courseName || !rating || !reviewText || !department) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (reviewText.length < 50) {
+                alert('Please provide a more detailed review (minimum 50 characters).');
+                return;
+            }
+
+            try {
+                const response = await fetch('api.php?action=add_review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        course: courseName,
+                        instructor: instructorName,
+                        rating,
+                        review: reviewText,
+                        department
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Your review has been submitted successfully!');
+                    window.location.href = 'course-reviews.html';
+                } else {
+                    throw new Error(data.message || 'Submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to submit the review. Please try again later.');
+            }
+        });
+    </script>
 </body>
 </html>

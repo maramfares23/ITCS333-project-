@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Events Calendar - UOB</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .events-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 0.75rem;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .event-card {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .event-meta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-description {
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .page-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .form-container {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="uob-logo.svg" alt="UOB Logo">
+                <span>UOB Events</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="news.html">Campus News</a></li>
+                <li><a href="event.javascript.html" class="active">Events Calendar</a></li>
+                <li><a href="course-reviews.html">Course Reviews</a></li>
+                <li><a href="finder.html">Study Groups</a></li>
+                <li><a href="clubactivites.html">Club Activities</a></li>
+            
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </div>
+    </nav>
+
+    <div class="events-container">
+        <h1>Events Calendar</h1>
+        
+        <div class="search-controls">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search events...">
+            <div class="control-buttons">
+                <button id="sortDateBtn" class="btn btn-secondary">
+                    <i class="fas fa-calendar"></i> Sort by Date
+                </button>
+                <button id="sortNameBtn" class="btn btn-secondary">
+                    <i class="fas fa-sort-alpha-down"></i> Sort by Name
+                </button>
+                <button class="btn btn-primary" onclick="showCreateForm()">
+                    <i class="fas fa-plus"></i> Add New Event
+                </button>
+            </div>
+        </div>
+
+        <div id="eventList" class="event-grid">
+            <!-- Events will be dynamically loaded here -->
+        </div>
+
+        <div class="pagination">
+            <button id="prevBtn" class="page-button">Previous</button>
+            <span id="pageIndicator" class="mx-4">Page 1 of 1</span>
+            <button id="nextBtn" class="page-button">Next</button>
+        </div>
+
+        <div id="createEventForm" class="form-container" style="display: none;">
+            <h2>Create New Event</h2>
+            <form id="eventForm" onsubmit="createEvent(event)">
+                <div class="form-group">
+                    <label for="eventTitle">Event Title</label>
+                    <input type="text" id="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Event Date</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Event Description</label>
+                    <textarea id="eventDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Event</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideCreateForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="eventDetail" class="form-container" style="display: none;">
+            <!-- Event details will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Sakhir Campus, Bahrain</p>
+                <p><i class="fas fa-phone"></i> +973 1234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@uob.edu.bh</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About UOB</a></li>
+                    <li><a href="#">Academic Programs</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">Student Services</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 University of Bahrain. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
+    <script src="event.js"></script>
+    <style>
+    .events-container {
+        max-width: 1400px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    .search-controls {
+        max-width: 1000px;
+        margin: 0 auto 2.5rem;
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        background: var(--surface);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin: 2.5rem auto;
+        max-width: 1400px;
+    }
+
+    .event-card {
+        background: var(--surface);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid var(--accent);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text);
+        line-height: 1.4;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 2.5rem;
+        color: var(--text);
+    }
+
+    .form-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: var(--surface);
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 4rem auto;
+        max-width: 500px;
+    }
+
+    .page-button {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    .search-input {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    .btn {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    .event-meta {
+        display: flex;
+        gap: 1.5rem;
+        color: var(--text-light);
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .comments-section {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--accent);
+    }
+
+    @media (max-width: 768px) {
+        .events-container {
+            padding: 0 1rem;
+            margin: 2rem auto;
+        }
+
+        .event-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .search-controls {
+            padding: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+</body>
+</html>
+

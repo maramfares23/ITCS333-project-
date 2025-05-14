@@ -1,53 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Course Notes - UOB</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Notes - Main Listing</title>
-    <link rel="stylesheet" href="main.css">
+    <meta name="description" content="University of Bahrain Course Notes - Share and access course materials">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .notes-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            background: var(--background);
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
+            outline: none;
+        }
+
+        .sort-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .sort-controls select {
+            padding: 0.875rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            background: var(--background);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-controls select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .item-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid var(--accent);
+        }
+
+        .item-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .item-card h2 {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .item-card .description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .page-button {
+            padding: 0.75rem 1.25rem;
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .page-button:hover {
+            background: var(--accent);
+            color: var(--text-inverse);
+        }
+
+        @media (max-width: 768px) {
+            .notes-container {
+                padding: 0 1rem;
+                margin: 2rem auto;
+            }
+
+            .search-controls {
+                flex-direction: column;
+            }
+
+            .item-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <header>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="uob-logo.svg" alt="UOB Logo">
+                <span>UOB Course Notes</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="event.javascript.html">Events</a></li>
+                <li><a href="course-reviews.html">Course Reviews</a></li>
+                <li><a href="finder.html">Study Groups</a></li>
+                <li><a href="#" class="active">Course Notes</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </div>
+    </nav>
+
+    <main class="notes-container">
         <h1>Course Notes</h1>
-        <div class="actions"><label><input type="text" placeholder="Search..." class="search-bar">
-
-            <a href=" item.html">
-                <button class="link-button">Add New Item</button>
+        
+        <div class="search-controls">
+            <input type="text" class="search-input" placeholder="Search notes...">
+            <div class="sort-controls">
+                <label for="sort">Sort by:</label>
+                <select id="sort" name="sort">
+                    <option value="date">Date</option>
+                    <option value="title">Title</option>
+                    <option value="course">Course</option>
+                </select>
+            </div>
+            <a href="item.html" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Note
             </a>
-
-
-        </label>
-
         </div>
-    </header>
 
-    <div class="controls">
-        <div class="sort-controls">
-            <label for="sort">Sort by:</label>
-            <select id="sort" name="sort">
-                <option value="date">Date</option>
-                <option value="title">Title</option>
-            </select>
+        <div class="item-grid">
+            <div class="item-card">
+                <h2>Introduction to Programming</h2>
+                <p class="description">Complete lecture notes covering basic programming concepts, including variables, loops, and functions.</p>
+                <a href="Detail.html" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+            </div>
+
+            <div class="item-card">
+                <h2>Data Structures</h2>
+                <p class="description">Comprehensive notes on arrays, linked lists, trees, and graphs with implementation examples.</p>
+                <a href="Detail.html" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+            </div>
+
+            <div class="item-card">
+                <h2>Database Systems</h2>
+                <p class="description">SQL queries, database design principles, and normalization concepts explained with examples.</p>
+                <a href="Detail.html" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+            </div>
         </div>
-        <div class="pagination-controls">
-            <button>Previous</button>
+
+        <div class="pagination">
+            <button class="page-button">Previous</button>
             <span>Page 1 of 5</span>
-            <button>Next</button>
+            <button class="page-button">Next</button>
         </div>
-    </div>
+    </main>
 
-    <div class="item-grid">
-        <!-- Items will be displayed here -->
-        <div class="item-card">
-            <h2>Title of the Note</h2>
-            <p class="description">Short description of the note content...</p>
-            <a href="Detail.html">
-                <button class="link-button">View Details</button>
-            </a>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Sakhir Campus, Bahrain</p>
+                <p><i class="fas fa-phone"></i> +973 1234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@uob.edu.bh</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About UOB</a></li>
+                    <li><a href="#">Academic Programs</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">Student Services</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
         </div>
-        <!-- Add more item cards here -->
-    </div>
-</div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 University of Bahrain. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
 </body>
 </html>
