@@ -1,223 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Meta and responsive setup -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Campus Hub - Events Calendar</title>
-  
-  <!-- Tailwind CSS for styling -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Events Calendar - UOB</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .events-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 0.75rem;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .event-card {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .event-meta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-description {
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .page-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .form-container {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-4">
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">Events Calendar</h1>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="uob-logo.svg" alt="UOB Logo">
+                <span>UOB Events</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="news.html">Campus News</a></li>
+                <li><a href="#" class="active">Events Calendar</a></li>
+                <li><a href="course-reviews.html">Course Reviews</a></li>
+                <li><a href="finder.html">Study Groups</a></li>
+                <li><a href="clubactivites.html">Club Activities</a></li>
+            
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </div>
+    </nav>
 
-    <!-- Add Event Form (with client-side validation) -->
-    <form id="eventForm" class="space-y-4 bg-white p-4 shadow rounded mb-6">
-      <h2 class="text-lg font-semibold">Add New Event (Validation Demo)</h2>
+    <div class="events-container">
+        <h1>Events Calendar</h1>
+        
+        <div class="search-controls">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search events...">
+            <div class="control-buttons">
+                <button id="sortDateBtn" class="btn btn-secondary">
+                    <i class="fas fa-calendar"></i> Sort by Date
+                </button>
+                <button id="sortNameBtn" class="btn btn-secondary">
+                    <i class="fas fa-sort-alpha-down"></i> Sort by Name
+                </button>
+                <button class="btn btn-primary" onclick="showCreateForm()">
+                    <i class="fas fa-plus"></i> Add New Event
+                </button>
+            </div>
+        </div>
 
-      <!-- Title Field -->
-      <div>
-        <label class="block mb-1">Event Title</label>
-        <input type="text" id="eventTitle" class="w-full p-2 border rounded" />
-        <p class="text-red-500 text-sm hidden" id="errorTitle">Title is required.</p>
-      </div>
+        <div id="eventList" class="event-grid">
+            <!-- Events will be dynamically loaded here -->
+        </div>
 
-      <!-- Date Field -->
-      <div>
-        <label class="block mb-1">Date (YYYY-MM-DD)</label>
-        <input type="date" id="eventDate" class="w-full p-2 border rounded" />
-        <p class="text-red-500 text-sm hidden" id="errorDate">Please enter a valid future date.</p>
-      </div>
+        <div class="pagination">
+            <button id="prevBtn" class="page-button">Previous</button>
+            <span id="pageIndicator" class="mx-4">Page 1 of 1</span>
+            <button id="nextBtn" class="page-button">Next</button>
+        </div>
 
-      <!-- Category Dropdown -->
-      <div>
-        <label class="block mb-1">Category</label>
-        <select id="eventCategory" class="w-full p-2 border rounded">
-          <option value="">Select a category</option>
-          <option value="Workshop">Workshop</option>
-          <option value="Seminar">Seminar</option>
-          <option value="Social">Social</option>
-        </select>
-        <p class="text-red-500 text-sm hidden" id="errorCategory">Please select a category.</p>
-      </div>
+        <div id="createEventForm" class="form-container" style="display: none;">
+            <h2>Create New Event</h2>
+            <form id="eventForm" onsubmit="createEvent(event)">
+                <div class="form-group">
+                    <label for="eventTitle">Event Title</label>
+                    <input type="text" id="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Event Date</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Event Description</label>
+                    <textarea id="eventDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Event</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideCreateForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
 
-      <!-- Description Field -->
-      <div>
-        <label class="block mb-1">Description</label>
-        <textarea id="eventDescription" class="w-full p-2 border rounded"></textarea>
-        <p class="text-red-500 text-sm hidden" id="errorDescription">Description is required.</p>
-      </div>
-
-      <!-- Submit Button -->
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Validate</button>
-    </form>
-
-    <!--Search and Filters Section -->
-    <div class="flex flex-wrap gap-4 mb-4">
-      <input id="searchInput" type="text" placeholder="Search events..." class="p-2 border rounded flex-1">
-      <select id="categoryFilter" class="p-2 border rounded">
-        <option value="">All Categories</option>
-        <option value="Workshop">Workshop</option>
-        <option value="Seminar">Seminar</option>
-        <option value="Social">Social</option>
-      </select>
-      <select id="sortOrder" class="p-2 border rounded">
-        <option value="asc">Sort by Date ↑</option>
-        <option value="desc">Sort by Date ↓</option>
-      </select>
+        <div id="eventDetail" class="form-container" style="display: none;">
+            <!-- Event details will be dynamically loaded here -->
+        </div>
     </div>
 
-    <!-- Events List Output -->
-    <div id="eventsList" class="space-y-4"></div>
-
-    <!-- Pagination Buttons -->
-    <div class="mt-6 flex justify-center space-x-2" id="pagination"></div>
-  </div>
-
-  <!-- JavaScript Section -->
-  <script>
-    // JSON source (hosted on GitHub or MockAPI)
-    const eventsUrl = "https://github.com/maramfares23/ITCS333-project-/blob/EVENT/event.json"
-
-    // Global state variables
-    let allEvents = [];
-    let currentPage = 1;
-    const eventsPerPage = 3;
-
-    // DOM element references
-    const searchInput = document.getElementById("searchInput");
-    const categoryFilter = document.getElementById("categoryFilter");
-    const sortOrder = document.getElementById("sortOrder");
-    const eventsList = document.getElementById("eventsList");
-    const pagination = document.getElementById("pagination");
-
-    //Fetch events from external JSON source
-    async function fetchEvents() {
-      eventsList.innerHTML = "<p>Loading events...</p>"; // Show loading message
-      try {
-        const res = await fetch(eventsUrl); // Fetch from JSON URL
-        if (!res.ok) throw new Error("Failed to fetch events."); // Handle HTTP errors
-        allEvents = await res.json(); // Parse JSON array
-        renderEvents(); // Display events
-      } catch (err) {
-        eventsList.innerHTML = `<p class="text-red-600">Error: ${err.message}</p>`; // Show error
-      }
-    }
-
-    //Render filtered, sorted, and paginated events
-    function renderEvents() {
-      // Apply search and category filter
-      let filtered = allEvents.filter(e =>
-        e.name.toLowerCase().includes(searchInput.value.toLowerCase()) &&
-        (!categoryFilter.value || e.category === categoryFilter.value)
-      );
-
-      // Sort by date
-      filtered.sort((a, b) =>
-        sortOrder.value === "asc"
-          ? new Date(a.date) - new Date(b.date)
-          : new Date(b.date) - new Date(a.date)
-      );
-
-      // Pagination logic
-      const totalPages = Math.ceil(filtered.length / eventsPerPage);
-      const start = (currentPage - 1) * eventsPerPage;
-      const pageItems = filtered.slice(start, start + eventsPerPage);
-
-      // Render each event as a card
-      eventsList.innerHTML = pageItems.map(event => `
-        <div class="p-4 bg-white shadow rounded">
-          <h2 class="text-xl font-semibold">${event.name}</h2>
-          <p class="text-sm text-gray-600">${event.date} | ${event.category}</p>
-          <p class="mt-2">${event.description}</p>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Sakhir Campus, Bahrain</p>
+                <p><i class="fas fa-phone"></i> +973 1234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@uob.edu.bh</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About UOB</a></li>
+                    <li><a href="#">Academic Programs</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">Student Services</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
         </div>
-      `).join("");
+        <div class="footer-bottom">
+            <p>&copy; 2025 University of Bahrain. All rights reserved.</p>
+        </div>
+    </footer>
 
-      // Render pagination controls
-      renderPagination(totalPages);
+    <script src="theme.js"></script>
+    <script src="event.js"></script>
+    <style>
+    .events-container {
+        max-width: 1400px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+        animation: fadeIn 0.3s ease-in;
     }
 
-    //Build pagination buttons
-    function renderPagination(totalPages) {
-      pagination.innerHTML = ""; // Clear old buttons
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.className = `px-3 py-1 rounded ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-white border'}`;
-        btn.addEventListener("click", () => {
-          currentPage = i;
-          renderEvents();
-        });
-        pagination.appendChild(btn);
-      }
+    .search-controls {
+        max-width: 1000px;
+        margin: 0 auto 2.5rem;
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        background: var(--surface);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    //Event listeners for filters and search
-    searchInput.addEventListener("input", () => { currentPage = 1; renderEvents(); });
-    categoryFilter.addEventListener("change", () => { currentPage = 1; renderEvents(); });
-    sortOrder.addEventListener("change", () => { currentPage = 1; renderEvents(); });
+    .event-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin: 2.5rem auto;
+        max-width: 1400px;
+    }
 
-    //Validate the Add Event form without submitting it
-    document.getElementById("eventForm").addEventListener("submit", function (e) {
-      e.preventDefault(); // Stop form from submitting
+    .event-card {
+        background: var(--surface);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid var(--accent);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
-      // Get field values
-      const title = document.getElementById("eventTitle");
-      const date = document.getElementById("eventDate");
-      const category = document.getElementById("eventCategory");
-      const description = document.getElementById("eventDescription");
+    .event-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text);
+        line-height: 1.4;
+    }
 
-      // Get error message elements
-      const errorTitle = document.getElementById("errorTitle");
-      const errorDate = document.getElementById("errorDate");
-      const errorCategory = document.getElementById("errorCategory");
-      const errorDescription = document.getElementById("errorDescription");
+    h1 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 2.5rem;
+        color: var(--text);
+    }
 
-      let valid = true; // Form validation flag
+    .form-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: var(--surface);
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
 
-      //Title must not be empty
-      if (title.value.trim() === "") {
-        errorTitle.classList.remove("hidden");
-        valid = false;
-      } else {
-        errorTitle.classList.add("hidden");
-      }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 4rem auto;
+        max-width: 500px;
+    }
 
-      //Date must be a valid future date
-      const today = new Date().toISOString().split("T")[0]; // Get today's date as string
-      if (!date.value || date.value < today) {
-        errorDate.classList.remove("hidden");
-        valid = false;
-      } else {
-        errorDate.classList.add("hidden");
-      }
+    .page-button {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
 
-      //Category must be selected
-      if (!category.value) {
-        errorCategory.classList.remove("hidden");
-        valid = false;
-      } else {
-        errorCategory.classList.add("hidden");
-      }
+    .search-input {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
 
-      //Description must not be empty
-      if (description.value.trim() === "") {
-        errorDescription.classList.remove("hidden");
-        valid = false;
-      } else {
-        errorDescription.classList.add("hidden");
-      }
+    .btn {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
 
-      //If everything is valid
-      if (valid) {
-        alert("Form is valid! You can now submit this to the backend.");
-      }
-    });
+    .event-meta {
+        display: flex;
+        gap: 1.5rem;
+        color: var(--text-light);
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
 
-    //Initial fetch on page load
-    fetchEvents();
-  </script>
+    .comments-section {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--accent);
+    }
+
+    @media (max-width: 768px) {
+        .events-container {
+            padding: 0 1rem;
+            margin: 2rem auto;
+        }
+
+        .event-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .search-controls {
+            padding: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
 </body>
 </html>
