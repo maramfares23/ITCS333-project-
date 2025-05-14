@@ -1,53 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>STUDY GROUP FINDER</title>
-  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" />
+    <title>Study Group Finder - UOB</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .finder-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 0.75rem;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            min-width: 200px;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .group-card {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .group-title {
+            margin: 0;
+            color: var(--text);
+            font-size: 1.25rem;
+        }
+
+        .group-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .create-group {
+            margin: 2rem 0;
+            text-align: right;
+        }
+    </style>
 </head>
 <body>
-    <h1>STUDY GROUP FINDER</h1>
-<main>
-  <div class="controls">
-    <input type="search" placeholder="Search study groups:" />
-    <select>
-      <option>All courses</option>
-      <option>ITCS333</option>
-      <option>ITCS113</option>
-      <option>ITCS214</option>
-    </select>
-    <select>
-      <option>Sort by</option>
-      <option>next week</option>
-      <option>up Coming</option>
-    </select>
-    <br><br>
-    <a href="listing.html">+ Add Study Group</a>
-  </div>
-  <article>
-    <h2>ITCS113 Test 2 Group</h2>
-    <p><strong>Subject:</strong> ITCS113<br>
-    <strong>Location:</strong> Open Lab<br>
-    <strong>Date & Time:</strong> April 30, 1PM</p>
-    <a href="detail.html">View Details</a>
-  </article>
-  <nav aria-label="Pagination">
-    <ul class="pagination">
-      <li><a href="#">«</a></li>
-      <li><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">»</a></li>
-    </ul>
-  </nav>
-</main>
-<header>
-  <nav>
-    <ul>
-      <li><a href="finder.html">Home</a></li>
-      <li><a href="listing.html">Add Group</a></li>
-      <li><a href="details.html">Details</a></li>
-    </ul>
-  </nav>
-</header>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="uob-logo.svg" alt="UOB Logo">
+                <span>UOB Study Groups</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="news.html">Home</a></li>
+                <li><a href="event.javascript.html">Events Calendar</a></li>
+                <li><a href="course-reviews.html">Course Reviews</a></li>
+                <li><a href="finder.html" class="active">Study Groups</a></li>
+                <li><a href="clubactivites.html">Club Activities</a></li>
+                <li><a href="#">Student Marketplace</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </div>
+    </nav>
+
+    <div class="finder-container">
+        <h1>Study Group Finder</h1>
+        
+        <div class="search-filters">
+            <input type="text" class="search-input" placeholder="Search by course code or group name...">
+            <div class="filter-group">
+                <select class="filter-select" id="subjectFilter">
+                    <option value="">All Subjects</option>
+                    <option value="ITCS">Computer Science</option>
+                    <option value="MATH">Mathematics</option>
+                    <option value="PHYS">Physics</option>
+                </select>
+                <select class="filter-select" id="dateFilter">
+                    <option value="">All Dates</option>
+                    <option value="today">Today</option>
+                    <option value="tomorrow">Tomorrow</option>
+                    <option value="week">This Week</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="create-group">
+            <a href="create-group.html" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create New Group
+            </a>
+        </div>
+
+        <div id="groupsContainer">
+            <!-- Study groups will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Sakhir Campus, Bahrain</p>
+                <p><i class="fas fa-phone"></i> +973 1234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@uob.edu.bh</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About UOB</a></li>
+                    <li><a href="#">Academic Programs</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">Student Services</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 University of Bahrain. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
+    <script>
+        // Sample study groups data
+        const groups = [
+            {
+                id: 1,
+                title: 'ITCS113 Test 2 Group',
+                subject: 'ITCS113',
+                location: 'Open Lab',
+                date: 'April 30',
+                time: '1:00 PM',
+                description: 'Study session for test 2',
+                participants: 5
+            }
+        ];
+
+        function displayGroups(filteredGroups = groups) {
+            const container = document.getElementById('groupsContainer');
+            container.innerHTML = filteredGroups.map(group => `
+                <div class="group-card">
+                    <div class="group-header">
+                        <h3 class="group-title">${group.title}</h3>
+                        <span class="participants">
+                            <i class="fas fa-users"></i> ${group.participants} joined
+                        </span>
+                    </div>
+                    <div class="group-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-book"></i>
+                            <span>${group.subject}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${group.location}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="far fa-calendar"></i>
+                            <span>${group.date}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="far fa-clock"></i>
+                            <span>${group.time}</span>
+                        </div>
+                    </div>
+                    <div class="group-description">${group.description}</div>
+                    <div style="margin-top: 1rem;">
+                        <a href="detail.html?id=${group.id}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search and filter functionality
+        document.querySelector('.search-input').addEventListener('input', filterGroups);
+        document.getElementById('subjectFilter').addEventListener('change', filterGroups);
+        document.getElementById('dateFilter').addEventListener('change', filterGroups);
+
+        function filterGroups() {
+            const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+            const subjectFilter = document.getElementById('subjectFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            const filteredGroups = groups.filter(group => {
+                const matchesSearch = group.title.toLowerCase().includes(searchTerm) ||
+                                    group.subject.toLowerCase().includes(searchTerm);
+                const matchesSubject = !subjectFilter || group.subject.startsWith(subjectFilter);
+                // Add date filtering logic here based on your needs
+
+                return matchesSearch && matchesSubject;
+            });
+
+            displayGroups(filteredGroups);
+        }
+
+        // Initial display
+        displayGroups();
+    </script>
 </body>
 </html>
