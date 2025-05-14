@@ -1,0 +1,20 @@
+[
+    {
+      "id": 1,
+      "title": "ITCS113 Test 2 Group",
+      "subject": "ITCS113",
+      "location": "Open Lab",
+      "date": "2025-04-30",
+      "time": "13:00",
+      "description": "Prepare for Test 2 together."
+    },
+    {
+      "id": 2,
+      "title": "Physics Crash Course",
+      "subject": "Physics",
+      "location": "Library Room 3",
+      "date": "2025-05-01",
+      "time": "15:00",
+      "description": "Quick physics review session."
+    }
+  ]
